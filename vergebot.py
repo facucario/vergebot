@@ -16,7 +16,7 @@ def download_image(background_image_url):
 
 def tweet(tweet_body, background_image_url):
     with open("last_tweet.txt", "w") as text_file:
-        text_file.write(tweet_body)
+        text_file.write(tweet_body + " " + background_image_url)
 
     download_image(background_image_url)
     image = open("background.jpg", "rb")
@@ -37,13 +37,14 @@ def _main():
     tag = soup.find("span", class_="c-masthead__tagline")
     link = tag.a.get("href")
     tagline = tag.string
-    current_tweet_body = (tagline+" "+link)
+    current_tweet_body = (tagline + " " + link)
 
     # Check for changes
     try:
         with open("last_tweet.txt", "r") as text_file:
-            prev_tweet_body = text_file.read()
-            if current_tweet_body != prev_tweet_body:
+            last_tweet = text_file.read()
+            current_tweet = current_tweet_body + " " + background_image_url
+            if current_tweet != last_tweet:
                 tweet(current_tweet_body, background_image_url)
     except:
         open("last_tweet.txt","w+")
